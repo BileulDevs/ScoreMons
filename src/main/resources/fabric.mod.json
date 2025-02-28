@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "scoremons",
+  "version": "${version}",
+  "name": "ScoreMons",
+  "description": "Player statistics for cobblemon",
+  "authors": [
+    "Darcosse"
+  ],
+  "license": "MIT License",
+  "icon": "assets/example/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.darcosse.scoremons.fabric.ScoreMons"
+    ]
+  },
+  "depends": {
+    "cobblemon": ">=1.6.1",
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
