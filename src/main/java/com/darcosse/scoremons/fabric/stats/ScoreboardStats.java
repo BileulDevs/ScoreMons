@@ -2,12 +2,15 @@ package com.darcosse.scoremons.fabric.stats;
 
 import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent;
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent;
+import com.cobblemon.mod.common.api.pokedex.CaughtCount;
+import com.cobblemon.mod.common.client.CobblemonClient;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,6 +41,16 @@ public class ScoreboardStats {
 
             if (player instanceof ServerPlayer serverPlayer) {
                 player.awardStat(Stats.CUSTOM.get(POKEMON_CAUGHT));
+
+                if(event.getPokemon().isLegendary() || event.getPokemon().isMythical() || event.getPokemon().isUltraBeast()) {
+                    for (Player p : player.getServer().getPlayerList().getPlayers()) {
+                        p.sendSystemMessage(
+                                Component.literal(
+                                        player.getName().getString() + " a capturé un " + event.getPokemon().getSpecies().getTranslatedName().getString() + " !"
+                                ).withStyle(Style.EMPTY.withColor(0x663399))
+                        );
+                    }
+                }
             }
 
             return Unit.INSTANCE;
@@ -55,7 +68,7 @@ public class ScoreboardStats {
                     for (Player p : player.getServer().getPlayerList().getPlayers()) {
                         p.sendSystemMessage(
                                 Component.literal(
-                                        player.getName().getString() + " a capturé un " + event.getPokemon().getSpecies().getName() + " shiny !"
+                                        player.getName().getString() + " a capturé un " + event.getPokemon().getSpecies().getTranslatedName() + " shiny !"
                                 )
                         );
                     }

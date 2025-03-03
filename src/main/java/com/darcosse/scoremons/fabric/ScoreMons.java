@@ -2,8 +2,8 @@ package com.darcosse.scoremons.fabric;
 
 import com.cobblemon.mod.common.api.Priority;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
-import com.darcosse.scoremons.fabric.stats.ScoreboardStats;
 import net.fabricmc.api.ModInitializer;
+import com.darcosse.scoremons.fabric.stats.ScoreboardStats;
 
 public class ScoreMons implements ModInitializer {
 
