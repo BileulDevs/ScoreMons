@@ -6,13 +6,11 @@ import com.cobblemon.mod.common.api.pokedex.CaughtCount;
 import com.cobblemon.mod.common.client.CobblemonClient;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +21,7 @@ public class ScoreboardStats {
     public static final ResourceLocation POKEMON_CAUGHT = ResourceLocation.tryParse("pokemon_caught");
     public static final ResourceLocation SHINY_POKEMON_CAUGHT = ResourceLocation.tryParse("shiny_pokemon_caught");
     public static final ResourceLocation BATTLE_WON = ResourceLocation.tryParse("battle_won");
+    public static final ResourceLocation POKEMON_REGISTERED = ResourceLocation.tryParse("pokemon_registered");
 
     public static void registerStats() {
         Registry.register(BuiltInRegistries.CUSTOM_STAT, POKEMON_CAUGHT, POKEMON_CAUGHT);
@@ -33,6 +32,9 @@ public class ScoreboardStats {
 
         Registry.register(BuiltInRegistries.CUSTOM_STAT, BATTLE_WON, BATTLE_WON);
         Stats.CUSTOM.get(BATTLE_WON);
+
+        Registry.register(BuiltInRegistries.CUSTOM_STAT, POKEMON_REGISTERED, POKEMON_REGISTERED);
+        Stats.CUSTOM.get(POKEMON_REGISTERED);
     }
 
     public static Function1<? super PokemonCapturedEvent, Unit> registerCapturedPokemon() {
@@ -47,7 +49,7 @@ public class ScoreboardStats {
                         p.sendSystemMessage(
                                 Component.literal(
                                         player.getName().getString() + " a capturé un " + event.getPokemon().getSpecies().getTranslatedName().getString() + " !"
-                                ).withStyle(Style.EMPTY.withColor(0x663399))
+                                ).withStyle(Style.EMPTY.withColor(0x7f32a8))
                         );
                     }
                 }
@@ -68,8 +70,8 @@ public class ScoreboardStats {
                     for (Player p : player.getServer().getPlayerList().getPlayers()) {
                         p.sendSystemMessage(
                                 Component.literal(
-                                        player.getName().getString() + " a capturé un " + event.getPokemon().getSpecies().getTranslatedName() + " shiny !"
-                                )
+                                        player.getName().getString() + " a capturé un " + event.getPokemon().getSpecies().getTranslatedName().getString() + " shiny !"
+                                ).withStyle(Style.EMPTY.withColor(0xc49e33))
                         );
                     }
                 }
