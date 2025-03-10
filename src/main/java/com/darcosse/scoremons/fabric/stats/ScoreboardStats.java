@@ -118,10 +118,6 @@ public class ScoreboardStats {
                 }
             }
 
-            player.sendSystemMessage(
-                    Component.literal(event.getPokemon().getSpecies().getTranslatedName().getString())
-            );
-
             return Unit.INSTANCE;
         };
     }
