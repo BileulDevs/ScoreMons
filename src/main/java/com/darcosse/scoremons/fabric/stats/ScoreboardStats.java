@@ -1,9 +1,8 @@
 package com.darcosse.scoremons.fabric.stats;
 
 import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent;
+import com.cobblemon.mod.common.api.events.pokemon.FossilRevivedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent;
-import com.cobblemon.mod.common.api.pokedex.CaughtCount;
-import com.cobblemon.mod.common.client.CobblemonClient;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import net.minecraft.core.Registry;
@@ -97,6 +96,33 @@ public class ScoreboardStats {
 
             }
                 return Unit.INSTANCE;
+        };
+    }
+
+    public static Function1<? super FossilRevivedEvent, Unit> revivedFossil() {
+        return event -> {
+            Player player = event.getPlayer();
+
+            if(event.getPokemon().getShiny()) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    player.awardStat(Stats.CUSTOM.get(SHINY_POKEMON_CAUGHT));
+                    player.awardStat(Stats.CUSTOM.get(POKEMON_CAUGHT));
+
+                    for (Player p : player.getServer().getPlayerList().getPlayers()) {
+                        p.sendSystemMessage(
+                                Component.literal(
+                                        player.getName().getString() + " a ressuscité un " + event.getPokemon().getSpecies().getTranslatedName().getString() + " shiny !"
+                                ).withStyle(Style.EMPTY.withColor(0xc49e33))
+                        );
+                    }
+                }
+            }
+
+            player.sendSystemMessage(
+                    Component.literal(event.getPokemon().getSpecies().getTranslatedName().getString())
+            );
+
+            return Unit.INSTANCE;
         };
     }
 
