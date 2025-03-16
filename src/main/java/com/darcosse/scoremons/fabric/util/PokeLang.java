@@ -11,8 +11,6 @@ public class PokeLang {
 
     public String getPokemonNameFR(String key) {
         registerPokemons();
-        System.out.println("Key : " +key.toLowerCase());
-        System.out.println("Trans : " + pokemonMap.get(key.toLowerCase()));
         return pokemonMap.get(key.toLowerCase());
     }
 

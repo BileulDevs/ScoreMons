@@ -3,16 +3,13 @@ package com.darcosse.scoremons.fabric;
 import com.cobblemon.mod.common.api.Priority;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.darcosse.scoremons.fabric.stats.ScoreboardStats;
-import com.darcosse.scoremons.fabric.util.PokeLang;
 import net.fabricmc.api.ModInitializer;
 
 public class ScoreMons implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PokeLang LangManager = new PokeLang();
         ScoreboardStats.registerStats();
-        LangManager.registerPokemons();
 
         CobblemonEvents.POKEMON_CAPTURED.subscribe(Priority.HIGHEST, ScoreboardStats.registerCapturedPokemon());
         CobblemonEvents.POKEMON_CAPTURED.subscribe(Priority.HIGHEST, ScoreboardStats.registerCapturedShinyPokemon());

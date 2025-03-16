@@ -53,7 +53,7 @@ public class ScoreboardStats {
                     for (Player p : player.getServer().getPlayerList().getPlayers()) {
                         p.sendSystemMessage(
                                 Component.literal(
-                                        player.getName().getString() + " a capturé un " + getPokemonNameFr(event.getPokemon().getSpecies().getName()) + " !"
+                                        player.getName().getString() + " a capturé un " + getPokemonNameFr(event.getPokemon().getSpecies().showdownId()) + " !"
                                 ).withStyle(Style.EMPTY.withColor(0x7f32a8))
                         );
                     }
@@ -75,7 +75,7 @@ public class ScoreboardStats {
                     for (Player p : player.getServer().getPlayerList().getPlayers()) {
                         p.sendSystemMessage(
                                 Component.literal(
-                                        player.getName().getString() + " a capturé un " + getPokemonNameFr(event.getPokemon().getSpecies().getName()) + " shiny !"
+                                        player.getName().getString() + " a capturé un " + getPokemonNameFr(event.getPokemon().getSpecies().showdownId()) + " shiny !"
                                 ).withStyle(Style.EMPTY.withColor(0xc49e33))
                         );
                     }
