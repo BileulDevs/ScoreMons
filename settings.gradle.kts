@@ -1,4 +1,4 @@
-rootProject.name = "ScoreMons" //By default, this is how your built jar is called
+rootProject.name = "ScoreMons"
 
 pluginManagement {
     repositories {

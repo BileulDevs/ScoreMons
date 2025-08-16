@@ -6,7 +6,7 @@ import com.cobblemon.mod.common.api.events.pokemon.FossilRevivedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.PokedexDataChangedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent;
 import com.cobblemon.mod.common.api.pokedex.CaughtCount;
-import com.darcosse.scoremons.fabric.util.PokeLang;
+import com.darcosse.scoremons.fabric.config.ConfigManager;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import net.fabricmc.loader.api.FabricLoader;
@@ -49,11 +49,15 @@ public class ScoreboardStats {
             if (player instanceof ServerPlayer serverPlayer) {
                 player.awardStat(Stats.CUSTOM.get(POKEMON_CAUGHT));
 
-                if(event.getPokemon().isLegendary() || event.getPokemon().isMythical() || event.getPokemon().isUltraBeast()) {
+                if (ConfigManager.shouldBroadcastLegendaryCaught() &&
+                        (event.getPokemon().isLegendary() || event.getPokemon().isMythical() || event.getPokemon().isUltraBeast())) {
+
                     for (Player p : player.getServer().getPlayerList().getPlayers()) {
                         p.sendSystemMessage(
-                                Component.literal(
-                                        player.getName().getString() + " a capturé un " + getPokemonNameFr(event.getPokemon().getSpecies().showdownId()) + " !"
+                                Component.translatable(
+                                        "scoremons.message.legendary_caught",
+                                        player.getName().getString(),
+                                        Component.translatable("pokemon.species." + event.getPokemon().getSpecies().showdownId())
                                 ).withStyle(Style.EMPTY.withColor(0x7f32a8))
                         );
                     }
@@ -72,12 +76,16 @@ public class ScoreboardStats {
                 if (player instanceof ServerPlayer serverPlayer) {
                     player.awardStat(Stats.CUSTOM.get(SHINY_POKEMON_CAUGHT));
 
-                    for (Player p : player.getServer().getPlayerList().getPlayers()) {
-                        p.sendSystemMessage(
-                                Component.literal(
-                                        player.getName().getString() + " a capturé un " + getPokemonNameFr(event.getPokemon().getSpecies().showdownId()) + " shiny !"
-                                ).withStyle(Style.EMPTY.withColor(0xc49e33))
-                        );
+                    if (ConfigManager.shouldBroadcastShinyCaught()) {
+                        for (Player p : player.getServer().getPlayerList().getPlayers()) {
+                            p.sendSystemMessage(
+                                    Component.translatable(
+                                            "scoremons.message.shiny_caught",
+                                            player.getName().getString(),
+                                            Component.translatable("pokemon.species." + event.getPokemon().getSpecies().showdownId())
+                                    ).withStyle(Style.EMPTY.withColor(0xc49e33))
+                            );
+                        }
                     }
                 }
             }
@@ -88,20 +96,16 @@ public class ScoreboardStats {
 
     public static Function1<? super BattleVictoryEvent, Unit> battleVictory() {
         return event -> {
-
             if(event.getBattle().isPvP()) {
-
                 Player player1 = event.getBattle().getPlayers().getFirst();
-
                 Player player = player1.getServer().getPlayerList().getPlayer(event.getWinners().getFirst().getUuid());
 
                 if (player instanceof ServerPlayer serverPlayer) {
                     Player p = serverPlayer.server.getPlayerList().getPlayer(event.getWinners().getFirst().getUuid());
                     p.awardStat(Stats.CUSTOM.get(BATTLE_WON));
                 }
-
             }
-                return Unit.INSTANCE;
+            return Unit.INSTANCE;
         };
     }
 
@@ -114,12 +118,16 @@ public class ScoreboardStats {
                     player.awardStat(Stats.CUSTOM.get(SHINY_POKEMON_CAUGHT));
                     player.awardStat(Stats.CUSTOM.get(POKEMON_CAUGHT));
 
-                    for (Player p : player.getServer().getPlayerList().getPlayers()) {
-                        p.sendSystemMessage(
-                                Component.literal(
-                                        player.getName().getString() + " a ressuscité un " + getPokemonNameFr(event.getPokemon().getSpecies().getName()) + " shiny !"
-                                ).withStyle(Style.EMPTY.withColor(0xc49e33))
-                        );
+                    if (ConfigManager.shouldBroadcastShinyFossilRevived()) {
+                        for (Player p : player.getServer().getPlayerList().getPlayers()) {
+                            p.sendSystemMessage(
+                                    Component.translatable(
+                                            "scoremons.message.shiny_fossil_revived",
+                                            player.getName().getString(),
+                                            Component.translatable("pokemon.species." + event.getPokemon().getSpecies().getName())
+                                    ).withStyle(Style.EMPTY.withColor(0xc49e33))
+                            );
+                        }
                     }
                 }
             }
@@ -150,18 +158,12 @@ public class ScoreboardStats {
         };
     }
 
-
-    private static String getPokemonNameFr(String pokemonName) {
-        return new PokeLang().getPokemonNameFR(pokemonName);
-    }
-
     private static void updateCaughtCount(ServerPlayer player) {
         int count = Cobblemon.playerDataManager.getPokedexData(player.getUUID()).getDexCalculatedValue(
                 ResourceLocation.tryParse("cobblemon:national"), CaughtCount.INSTANCE
         );
 
         int currentCount = player.getStats().getValue(Stats.CUSTOM.get(POKEMON_REGISTERED));
-
         int toUpdate = count - currentCount;
 
         for (int i = 0; i < toUpdate; i++) {
@@ -174,5 +176,4 @@ public class ScoreboardStats {
                 ResourceLocation.tryParse("cobblemon:national"), CaughtCount.INSTANCE
         );
     }
-
 }
