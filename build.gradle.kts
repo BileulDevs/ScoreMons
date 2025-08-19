@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "dev.darcosse"
-version = "2.0.0"
+version = "2.1.0"
 
 architectury {
     platformSetupLoomIde()
@@ -30,19 +30,14 @@ repositories {
 
 dependencies {
     minecraft("net.minecraft:minecraft:1.21.1")
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:0.16.10")
+    //mappings("net.fabricmc:yarn:1.21.1+build.1:v2")
+    mappings("net.fabricmc:yarn:1.21.1+build.3:v2")
+    modImplementation("net.fabricmc:fabric-loader:0.16.5")
 
-    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:0.104.0+1.21.1")
-    modImplementation(fabricApi.module("fabric-command-api-v2", "0.104.0+1.21.1"))
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.104.0+1.21.1")
 
     modImplementation("net.fabricmc:fabric-language-kotlin:1.12.3+kotlin.2.0.21")
-    modImplementation("com.cobblemon:fabric:1.6.1+1.21.1")
-
-    implementation("org.glassfish:javax.json:1.1.4")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.3")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.15.3")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.3")
+    modImplementation("com.cobblemon:fabric:1.6.0+1.21.1-SNAPSHOT")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")

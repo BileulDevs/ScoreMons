@@ -2,6 +2,7 @@ package com.darcosse.scoremons.fabric;
 
 import com.cobblemon.mod.common.api.Priority;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
+import com.darcosse.scoremons.fabric.config.ConfigManager;
 import com.darcosse.scoremons.fabric.stats.ScoreboardStats;
 import net.fabricmc.api.ModInitializer;
 
@@ -9,6 +10,7 @@ public class ScoreMons implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ConfigManager.loadConfig();
         ScoreboardStats.registerStats();
 
         CobblemonEvents.POKEMON_CAPTURED.subscribe(Priority.HIGHEST, ScoreboardStats.registerCapturedPokemon());
