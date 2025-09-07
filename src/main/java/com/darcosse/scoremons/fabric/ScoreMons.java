@@ -18,5 +18,7 @@ public class ScoreMons implements ModInitializer {
         CobblemonEvents.BATTLE_VICTORY.subscribe(Priority.HIGHEST, ScoreboardStats.battleVictory());
         CobblemonEvents.FOSSIL_REVIVED.subscribe(Priority.HIGHEST, ScoreboardStats.revivedFossil());
         CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe(Priority.HIGHEST, ScoreboardStats.registerCaughtCount());
+        CobblemonEvents.BOBBER_SPAWN_POKEMON_POST.subscribe(Priority.HIGHEST, ScoreboardStats.registerReel());
+        CobblemonEvents.TRADE_COMPLETED.subscribe(Priority.HIGHEST, ScoreboardStats.registerTrades());
     }
 }

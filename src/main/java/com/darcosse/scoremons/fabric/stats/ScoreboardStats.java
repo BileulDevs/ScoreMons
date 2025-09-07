@@ -2,10 +2,15 @@ package com.darcosse.scoremons.fabric.stats;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent;
+import com.cobblemon.mod.common.api.events.fishing.BobberSpawnPokemonEvent;
+import com.cobblemon.mod.common.api.events.fishing.PokerodReelEvent;
 import com.cobblemon.mod.common.api.events.pokemon.FossilRevivedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.PokedexDataChangedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent;
+import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent;
 import com.cobblemon.mod.common.api.pokedex.CaughtCount;
+import com.cobblemon.mod.common.trade.PlayerTradeParticipant;
+import com.cobblemon.mod.common.trade.TradeParticipant;
 import com.darcosse.scoremons.fabric.config.ConfigManager;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -20,30 +25,35 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.entity.player.PlayerEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ScoreboardStats {
 
     private static final String MODID = "scoremons";
 
-    // IDs Yarn = Identifier (pas ResourceLocation)
-    public static final Identifier POKEMON_CAUGHT      =  Identifier.of(MODID, "pokemon_caught");
-    public static final Identifier SHINY_POKEMON_CAUGHT=  Identifier.of(MODID, "shiny_pokemon_caught");
-    public static final Identifier BATTLE_WON          =  Identifier.of(MODID, "battle_won");
-    public static final Identifier POKEMON_REGISTERED  =  Identifier.of(MODID, "pokemon_registered");
+    public static final Identifier POKEMON_CAUGHT = Identifier.of(MODID, "pokemon_caught");
+    public static final Identifier SHINY_POKEMON_CAUGHT = Identifier.of(MODID, "shiny_pokemon_caught");
+    public static final Identifier BATTLE_WON = Identifier.of(MODID, "battle_won");
+    public static final Identifier POKEMON_REGISTERED = Identifier.of(MODID, "pokemon_registered");
+    public static final Identifier POKEMON_REEL = Identifier.of(MODID, "pokemon_reel");
+    public static final Identifier TRADES = Identifier.of(MODID, "trades");
 
-    /** Enregistrer les stats custom (Yarn) */
     public static void registerStats() {
         Registry.register(Registries.CUSTOM_STAT, POKEMON_CAUGHT, POKEMON_CAUGHT);
         Registry.register(Registries.CUSTOM_STAT, SHINY_POKEMON_CAUGHT, SHINY_POKEMON_CAUGHT);
         Registry.register(Registries.CUSTOM_STAT, BATTLE_WON, BATTLE_WON);
         Registry.register(Registries.CUSTOM_STAT, POKEMON_REGISTERED, POKEMON_REGISTERED);
+        Registry.register(Registries.CUSTOM_STAT, POKEMON_REEL, POKEMON_REEL);
+        Registry.register(Registries.CUSTOM_STAT, TRADES, TRADES);
 
-        // Force la création des Stat<?> correspondantes
         Stats.CUSTOM.getOrCreateStat(POKEMON_CAUGHT);
         Stats.CUSTOM.getOrCreateStat(SHINY_POKEMON_CAUGHT);
         Stats.CUSTOM.getOrCreateStat(BATTLE_WON);
         Stats.CUSTOM.getOrCreateStat(POKEMON_REGISTERED);
+        Stats.CUSTOM.getOrCreateStat(POKEMON_REEL);
+        Stats.CUSTOM.getOrCreateStat(TRADES);
     }
 
     /** +1 quand un Pokémon est capturé ; annonce si légendaire/mythique/ultra */
@@ -72,6 +82,39 @@ public class ScoreboardStats {
             return Unit.INSTANCE;
         };
     }
+
+    public static Function1<? super BobberSpawnPokemonEvent.Post, Unit> registerReel() {
+        return event -> {
+            var player = event.component1().getPlayerOwner();
+            if (player != null) {
+                if (player instanceof ServerPlayerEntity sp) {
+                    sp.incrementStat(Stats.CUSTOM.getOrCreateStat(POKEMON_REEL));
+                }
+                return Unit.INSTANCE;
+            }
+            return Unit.INSTANCE;
+        };
+    }
+
+    public static Function1<? super TradeCompletedEvent, Unit> registerTrades() {
+        return event -> {
+
+            List<TradeParticipant> players = new ArrayList<>();
+
+            players.add(event.getTradeParticipant1());
+            players.add(event.getTradeParticipant2());
+
+            for (TradeParticipant p : players) {
+                PlayerTradeParticipant tradeParticipant = (PlayerTradeParticipant) p;
+                if (tradeParticipant.getPlayer() instanceof ServerPlayerEntity sp) {
+                    sp.incrementStat(Stats.CUSTOM.getOrCreateStat(TRADES));
+                }
+            }
+
+            return Unit.INSTANCE;
+        };
+    }
+
 
     /** +1 shiny capturé ; annonce si activée */
     public static Function1<? super PokemonCapturedEvent, Unit> registerCapturedShinyPokemon() {
