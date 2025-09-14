@@ -1,13 +1,17 @@
 package com.darcosse.scoremons.fabric.stats;
 
 import com.cobblemon.mod.common.Cobblemon;
+import com.cobblemon.mod.common.api.battles.model.PokemonBattle;
 import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent;
 import com.cobblemon.mod.common.api.events.fishing.BobberSpawnPokemonEvent;
 import com.cobblemon.mod.common.api.events.fishing.PokerodReelEvent;
+import com.cobblemon.mod.common.api.events.pokeball.ThrownPokeballHitEvent;
 import com.cobblemon.mod.common.api.events.pokemon.FossilRevivedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.PokedexDataChangedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.TradeCompletedEvent;
+import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionAcceptedEvent;
+import com.cobblemon.mod.common.api.events.pokemon.evolution.EvolutionCompleteEvent;
 import com.cobblemon.mod.common.api.pokedex.CaughtCount;
 import com.cobblemon.mod.common.trade.PlayerTradeParticipant;
 import com.cobblemon.mod.common.trade.TradeParticipant;
@@ -39,6 +43,9 @@ public class ScoreboardStats {
     public static final Identifier POKEMON_REGISTERED = Identifier.of(MODID, "pokemon_registered");
     public static final Identifier POKEMON_REEL = Identifier.of(MODID, "pokemon_reel");
     public static final Identifier TRADES = Identifier.of(MODID, "trades");
+    public static final Identifier FOSSIL_REVIVED = Identifier.of(MODID, "fossil_revived");
+    public static final Identifier POKEBALL_THROWN = Identifier.of(MODID, "pokeball_thrown");
+    public static final Identifier POKEMON_EVOLVED  = Identifier.of(MODID, "pokemon_evolved");
 
     public static void registerStats() {
         Registry.register(Registries.CUSTOM_STAT, POKEMON_CAUGHT, POKEMON_CAUGHT);
@@ -47,6 +54,9 @@ public class ScoreboardStats {
         Registry.register(Registries.CUSTOM_STAT, POKEMON_REGISTERED, POKEMON_REGISTERED);
         Registry.register(Registries.CUSTOM_STAT, POKEMON_REEL, POKEMON_REEL);
         Registry.register(Registries.CUSTOM_STAT, TRADES, TRADES);
+        Registry.register(Registries.CUSTOM_STAT, FOSSIL_REVIVED, FOSSIL_REVIVED);
+        Registry.register(Registries.CUSTOM_STAT, POKEBALL_THROWN, POKEBALL_THROWN);
+        Registry.register(Registries.CUSTOM_STAT, POKEMON_EVOLVED, POKEMON_EVOLVED);
 
         Stats.CUSTOM.getOrCreateStat(POKEMON_CAUGHT);
         Stats.CUSTOM.getOrCreateStat(SHINY_POKEMON_CAUGHT);
@@ -54,6 +64,9 @@ public class ScoreboardStats {
         Stats.CUSTOM.getOrCreateStat(POKEMON_REGISTERED);
         Stats.CUSTOM.getOrCreateStat(POKEMON_REEL);
         Stats.CUSTOM.getOrCreateStat(TRADES);
+        Stats.CUSTOM.getOrCreateStat(FOSSIL_REVIVED);
+        Stats.CUSTOM.getOrCreateStat(POKEBALL_THROWN);
+        Stats.CUSTOM.getOrCreateStat(POKEMON_EVOLVED);
     }
 
     /** +1 quand un Pokémon est capturé ; annonce si légendaire/mythique/ultra */
@@ -177,6 +190,10 @@ public class ScoreboardStats {
         return event -> {
             var player = event.getPlayer();
 
+            if (player instanceof ServerPlayerEntity sp) {
+                sp.incrementStat(Stats.CUSTOM.getOrCreateStat(FOSSIL_REVIVED));
+            }
+
             if (event.getPokemon().getShiny() && player instanceof ServerPlayerEntity sp) {
                 sp.incrementStat(Stats.CUSTOM.getOrCreateStat(SHINY_POKEMON_CAUGHT));
                 sp.incrementStat(Stats.CUSTOM.getOrCreateStat(POKEMON_CAUGHT));
@@ -193,6 +210,30 @@ public class ScoreboardStats {
                     }
                 }
             }
+            return Unit.INSTANCE;
+        };
+    }
+
+    public static Function1<? super ThrownPokeballHitEvent, Unit> registerThrownBall() {
+        return event -> {
+            var owner = event.getPokeBall().getOwner();
+
+            if (owner instanceof ServerPlayerEntity sp) {
+                sp.incrementStat(Stats.CUSTOM.getOrCreateStat(POKEBALL_THROWN));
+            }
+
+            return Unit.INSTANCE;
+        };
+    }
+
+    public static Function1<? super EvolutionCompleteEvent, Unit> registerEvolution() {
+        return event -> {
+            var player = event.component1().getOwnerPlayer();
+
+            if (player instanceof ServerPlayerEntity sp) {
+                sp.incrementStat(Stats.CUSTOM.getOrCreateStat(POKEMON_EVOLVED));
+            }
+
             return Unit.INSTANCE;
         };
     }

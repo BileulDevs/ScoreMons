@@ -1030,5 +1030,10 @@
   "stat.scoremons.pokemon_caught": "Pokémon Caught",
   "stat.scoremons.shiny_pokemon_caught": "Shiny Pokémon Caught",
   "stat.scoremons.battle_won": "PvP Battles Won",
-  "stat.scoremons.pokemon_registered": "Pokémon Registered"
+  "stat.scoremons.pokemon_registered": "Pokémon Registered",
+  "stat.scoremons.fossil_revived": "Fossils Revived",
+  "stat.scoremons.pokeball_thrown": "Poké Balls Thrown",
+  "stat.scoremons.pokemon_evolved": "Pokémon Evolved",
+  "stat.scoremons.pokemon_reel": "Pokémon Reeled In",
+  "stat.scoremons.trades": "Trades Completed"
 }

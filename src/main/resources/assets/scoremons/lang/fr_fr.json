@@ -1030,5 +1030,10 @@
   "stat.scoremons.pokemon_caught": "Pokémon Capturés",
   "stat.scoremons.shiny_pokemon_caught": "Pokémon Shiny Capturés",
   "stat.scoremons.battle_won": "Combats PvP Gagnés",
-  "stat.scoremons.pokemon_registered": "Pokémon Enregistrés"
+  "stat.scoremons.pokemon_registered": "Pokémon Enregistrés",
+  "stat.scoremons.fossil_revived": "Fossiles ressuscités",
+  "stat.scoremons.pokeball_thrown": "Poké Balls lancées",
+  "stat.scoremons.pokemon_evolved": "Pokémon évolués",
+  "stat.scoremons.pokemon_reel": "Pokémon pêchés",
+  "stat.scoremons.trades": "Échanges"
 }
