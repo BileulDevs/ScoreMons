@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "dev.darcosse"
-version = "2.2"
+version = "2.3.1"
 
 architectury {
     platformSetupLoomIde()

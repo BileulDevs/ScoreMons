@@ -202,7 +202,7 @@ public class ScoreboardStats {
                     Text message = Text.translatable(
                             "scoremons.message.shiny_fossil_revived",
                             sp.getName().getString(),
-                            Text.translatable("pokemon.species." + event.getPokemon().getSpecies().getName())
+                            Text.translatable("pokemon.species." + event.getPokemon().getSpecies().showdownId())
                     ).styled(style -> style.withColor(0xc49e33));
 
                     for (ServerPlayerEntity p : sp.getServer().getPlayerManager().getPlayerList()) {
